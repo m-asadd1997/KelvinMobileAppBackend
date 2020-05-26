@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserDetailsService {
 			User newUser = new User();
 			newUser.setEmail(user.getEmail());
 			newUser.setName(user.getName());
-			newUser.setClientId(user.getClientId());
+
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 			newUser.setUserType(user.getUserType());
 			newUser.setActive(user.getActive());
