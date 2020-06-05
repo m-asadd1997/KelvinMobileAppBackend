@@ -84,7 +84,6 @@ public class UserServiceImpl implements UserDetailsService {
 			User newUser = new User();
 			newUser.setEmail(user.getEmail());
 			newUser.setName(user.getName());
-
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 			newUser.setUserType(user.getUserType());
 			newUser.setActive(user.getActive());
@@ -107,6 +106,29 @@ public class UserServiceImpl implements UserDetailsService {
  		}
 
 		return null;
+	}
+
+	public ApiResponse getUserByPatterns(String name){
+			List<User> users = userDaoRepository.getUsersByPattern(name);
+
+			if(!users.isEmpty()){
+				return new ApiResponse<>(200,"Users found",users);
+			}
+			else {
+				return new ApiResponse<>(404,"Users not found",null);
+			}
+
+	}
+
+	public ApiResponse findById2(Long id) {
+		Optional<User> optionalUser = userDaoRepository.findById(id);
+		if(optionalUser.isPresent()){
+			User user = optionalUser.get();
+			return new ApiResponse<>(200,"User found",user);
+		}
+		else {
+			return new ApiResponse<>(404,"User not found",null);
+		}
 	}
 
 

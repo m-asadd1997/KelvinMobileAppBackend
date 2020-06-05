@@ -51,7 +51,7 @@ public class AuthenticationController {
     @PostMapping("/user")
     public ApiResponse<User> saveUser(@RequestBody UserDto user){
 
-        return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",userService.save(user));
+        return userService.save(user);
     }
 
     @RequestMapping(value = "/getusers", method = RequestMethod.GET)
@@ -76,10 +76,18 @@ public class AuthenticationController {
 
     }
 
-
-
     @GetMapping("/")
     public String getdata(){
         return "hello runing";
+    }
+
+    @GetMapping("/{name}")
+    public ApiResponse getUsersByPatterns(@PathVariable String name){
+        return userService.getUserByPatterns(name);
+    }
+
+    @GetMapping("/user/{id}")
+    public  ApiResponse getUserById(@PathVariable Long id){
+        return  userService.findById2(id);
     }
 }
