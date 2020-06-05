@@ -19,6 +19,7 @@ public class FriendService {
     @Autowired
     FriendRepository friendRepository;
 
+
     @Autowired
     UserDaoRepository userDaoRepository;
 
