@@ -3,6 +3,7 @@ package com.example.excelProj.Repository;
 import com.example.excelProj.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface UserDaoRepository extends JpaRepository<User, Long> {
     public User findByEmailAndActive(String email,Boolean active);
 
     public User findByEmailAndUserType(String email,String userType);
+
+    @Query(value = "select * from user where name like :name%",nativeQuery = true)
+    public List<User> getUsersByPattern(@Param("name") String name);
 }
