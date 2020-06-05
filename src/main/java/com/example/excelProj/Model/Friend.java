@@ -23,14 +23,29 @@ public class Friend {
     @JsonIgnoreProperties("friendList")
     private User friend;
 
-    Boolean status;
+    String status;
+
+    public Friend(User userObj, User friend, String status) {
+        this.userObj = userObj;
+        this.friend = friend;
+        this.status = status;
+    }
 
 
-    public Boolean getStatus() {
+
+    public User getUserObj() {
+        return userObj;
+    }
+
+    public void setUserObj(User userObj) {
+        this.userObj = userObj;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -61,8 +76,4 @@ public class Friend {
         this.id = id;
     }
 
-    public Friend(User userObj, User friend) {
-        this.userObj = userObj;
-        this.friend = friend;
-    }
 }
