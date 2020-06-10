@@ -1,5 +1,7 @@
 package com.example.excelProj.Service;
 
+import com.example.excelProj.Model.Friend;
+import com.example.excelProj.Repository.FriendRepository;
 import com.example.excelProj.Repository.UserDaoRepository;
 import com.example.excelProj.Commons.ApiResponse;
 import com.example.excelProj.Dto.UserDto;
@@ -8,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +32,9 @@ public class UserServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private BCryptPasswordEncoder bcryptEncoder;
+
+	@Autowired
+	FriendRepository friendRepository;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userDaoRepository.findByEmail(username);
@@ -124,12 +130,52 @@ public class UserServiceImpl implements UserDetailsService {
 		Optional<User> optionalUser = userDaoRepository.findById(id);
 		if(optionalUser.isPresent()){
 			User user = optionalUser.get();
-			return new ApiResponse<>(200,"User found",user);
+			return new ApiResponse<>(200,getStatusOfUser(id),user);
 		}
 		else {
 			return new ApiResponse<>(404,"User not found",null);
 		}
 	}
 
+	public String getStatusOfUser(Long friendId){
+		Long userId = getIdOfLoggedInUser();
+		Friend friend = friendRepository.findByUserAndFriend(friendId,userId);
+		Friend friend1 = friendRepository.findByUserAndFriend(userId,friendId);
+
+		if(friend == null && friend1 != null){
+			return getStatus(friend1,userId);
+		}
+		else if(friend != null && friend1 == null){
+			return  getStatus(friend,userId);
+		}
+		else if(friend !=null && friend1!=null){
+			return getStatus(friend,userId);
+		}
+		else {
+			return "not friends";
+		}
+
+	}
+
+	public String getStatus(Friend friend, Long userId){
+		if((userId == friend.getUserObj().getId() && friend.getStatus().equals("pending"))){
+			return "pending";
+		}
+		else if(userId == friend.getFriend().getId() && friend.getStatus().equals("pending")){
+			return "pendingN";
+		}
+		else{
+			return friend.getStatus();
+		}
+	}
+
+	public Long getIdOfLoggedInUser()
+	{
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		String username = userDetails.getUsername();
+		User user = userDaoRepository.findByEmail(username);
+		return user.getId();
+	}
 
 }

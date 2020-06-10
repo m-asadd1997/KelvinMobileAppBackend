@@ -31,7 +31,7 @@ public class User {
 
 
     @OneToMany(mappedBy = "userObj", cascade = CascadeType.ALL)
-	@JsonIgnoreProperties("user")
+	@JsonIgnore
     private List<Friend> friendList;
 
 

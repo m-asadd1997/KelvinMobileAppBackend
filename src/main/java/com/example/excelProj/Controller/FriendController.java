@@ -1,6 +1,8 @@
 package com.example.excelProj.Controller;
 
 
+import com.example.excelProj.Commons.ApiResponse;
+import com.example.excelProj.Dto.FriendsIdDto;
 import com.example.excelProj.Model.Friend;
 import com.example.excelProj.Model.User;
 import com.example.excelProj.Repository.FriendRepository;
@@ -9,7 +11,7 @@ import com.example.excelProj.Service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sun.reflect.generics.repository.FieldRepository;
+//import sun.reflect.generics.repository.FieldRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -25,30 +27,35 @@ public class FriendController {
     @Autowired
     FriendService friendService;
 
-    @GetMapping("/send-request")
-    public ResponseEntity<String> sendRequest(@RequestParam  Long userId, @RequestParam Long friendId) {
-     return friendService.sendRequest(userId,friendId);
+    @PostMapping("/send-request")
+    public ApiResponse sendRequest(@RequestBody FriendsIdDto friendsIdDto) {
+     return friendService.sendRequest(friendsIdDto);
     }
 
 
-    @GetMapping("/accept-request")
-    public ResponseEntity<String> acceptRequest(@RequestParam  Long userId, @RequestParam Long friendId) {
-        return friendService.acceptRequest(userId,friendId);
+    @PostMapping("/accept-request")
+    public ApiResponse acceptRequest(@RequestBody FriendsIdDto friendsIdDto) {
+        return friendService.acceptRequest(friendsIdDto);
     }
 
     @GetMapping("/get-all-requests/{id}")
-    public List<Friend> getAllRequests(@PathVariable("id")  Long userId) {
+    public ApiResponse getAllRequests(@PathVariable("id")  Long userId) {
         return friendService.getAllRequests(userId);
     }
 
     @GetMapping("/remove-friend")
-    public ResponseEntity<String> removeFriend(@RequestParam  Long userId, @RequestParam Long friendId) {
-        return friendService.removeFriend(userId,friendId);
+    public ApiResponse removeFriend(@RequestBody FriendsIdDto friendsIdDto) {
+        return friendService.removeFriend(friendsIdDto);
     }
 
-    @GetMapping("/cancel-request")
-    public ResponseEntity<String> cancelRequest(@RequestParam  Long userId, @RequestParam Long friendId) {
-        return friendService.removeFriend(userId,friendId);
+    @PostMapping("/cancel-request")
+    public ApiResponse cancelRequest(@RequestBody FriendsIdDto friendsIdDto) {
+        return friendService.removeFriend(friendsIdDto);
+    }
+
+    @GetMapping("/get-all-friends/{id}")
+    public ApiResponse getAllFriends(@PathVariable("id")  Long userId) {
+        return friendService.getAllFriends(userId);
     }
 
 }
