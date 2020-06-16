@@ -20,6 +20,6 @@ public interface UserDaoRepository extends JpaRepository<User, Long> {
 
     public User findByEmailAndUserType(String email,String userType);
 
-    @Query(value = "select * from user where name like :name%",nativeQuery = true)
-    public List<User> getUsersByPattern(@Param("name") String name);
+    @Query(value = "select * from user where name like :name% and id !=:userId",nativeQuery = true)
+    public List<User> getUsersByPattern(@Param("name") String name,@Param("userId") Long id);
 }

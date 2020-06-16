@@ -27,7 +27,12 @@ public class User {
     private String userType;
 
 
+    private String description;
 
+    @Lob
+    private byte[] profilePicture;
+
+    private Integer noOfFriends;
 
 
     @OneToMany(mappedBy = "userObj", cascade = CascadeType.ALL)
@@ -111,5 +116,27 @@ public class User {
         this.active = isActive;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public Integer getNoOfFriends() {
+        return noOfFriends;
+    }
+
+    public void setNoOfFriends(Integer noOfFriends) {
+        this.noOfFriends = noOfFriends;
+    }
 }
