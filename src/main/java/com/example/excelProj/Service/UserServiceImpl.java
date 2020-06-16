@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserDetailsService {
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 			newUser.setUserType(user.getUserType());
 			newUser.setActive(user.getActive());
+			newUser.setNoOfFriends(0);
 			return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",	userDaoRepository.save(newUser));//return ;
 		}else{
 			return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "User Already exsist.",null);//return ;
@@ -115,7 +116,7 @@ public class UserServiceImpl implements UserDetailsService {
 	}
 
 	public ApiResponse getUserByPatterns(String name){
-			List<User> users = userDaoRepository.getUsersByPattern(name);
+			List<User> users = userDaoRepository.getUsersByPattern(name,getIdOfLoggedInUser());
 
 			if(!users.isEmpty()){
 				return new ApiResponse<>(200,"Users found",users);
@@ -177,5 +178,36 @@ public class UserServiceImpl implements UserDetailsService {
 		User user = userDaoRepository.findByEmail(username);
 		return user.getId();
 	}
+
+	public ApiResponse saveProfilePicture(UserDto userDto){
+		Optional <User> user = userDaoRepository.findById(getIdOfLoggedInUser());
+
+		if (user.isPresent()){
+			User user1 = user.get();
+			user1.setProfilePicture(userDto.getProfilePicture());
+			userDaoRepository.save(user1);
+			return new ApiResponse(200,"Profile picture updated",user1);
+		}
+		else{
+			return new ApiResponse(400,"Error updating profile picture",null);
+		}
+	}
+
+
+	public ApiResponse saveProfileDescription(UserDto userDto){
+		Optional <User> user = userDaoRepository.findById(getIdOfLoggedInUser());
+
+
+		if (user.isPresent()){
+			User user1 = user.get();
+			user1.setDescription(userDto.getDescription());
+			return new ApiResponse(200,"User Description updated",userDaoRepository.save(user1));
+		}
+		else{
+			return new ApiResponse(400,"Error updating user Description",null);
+		}
+	}
+
+
 
 }

@@ -1,5 +1,7 @@
 package com.example.excelProj.Dto;
 
+import javax.persistence.Lob;
+
 public class UserDto {
 
     private String name;
@@ -7,6 +9,9 @@ public class UserDto {
     private String password;
     private Boolean active ;
     private String userType;
+	private String description;
+	@Lob
+	private byte[] profilePicture;
 
 	public UserDto(String name, String email, String password, Boolean active, String userType) {
 		this.name = name;
@@ -60,5 +65,19 @@ public class UserDto {
 		this.userType = userType;
 	}
 
+	public String getDescription() {
+		return description;
+	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
+	}
 }

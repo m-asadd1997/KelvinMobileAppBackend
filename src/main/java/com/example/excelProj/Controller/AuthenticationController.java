@@ -41,7 +41,7 @@ public class AuthenticationController {
         if(user!=null){
             final String token = jwtTokenUtil.generateToken(user);
 
-            return new ApiResponse<>(200, "success",new AuthToken(token,user.getName(),user.getUserType(),user.getEmail(),user.getId()));
+            return new ApiResponse<>(200, "success",new AuthToken(token,user.getName(),user.getUserType(),user.getEmail(),user.getId(),user.getProfilePicture()));
         }
 
       return new ApiResponse<>(404, "RECORD NOT FOUND",new AuthToken("","","",""));
@@ -89,5 +89,15 @@ public class AuthenticationController {
     @GetMapping("/user/{id}")
     public  ApiResponse getUserById(@PathVariable Long id){
         return  userService.findById2(id);
+    }
+
+    @PostMapping("/picture")
+    public ApiResponse saveProfilePicture(@RequestBody UserDto userDto){
+        return userService.saveProfilePicture(userDto);
+    }
+
+    @PostMapping("/description")
+    public ApiResponse saveProfileDescription(@RequestBody UserDto userDto){
+        return userService.saveProfileDescription(userDto);
     }
 }

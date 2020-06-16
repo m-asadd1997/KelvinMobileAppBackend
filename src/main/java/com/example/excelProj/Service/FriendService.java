@@ -31,6 +31,8 @@ public class FriendService {
         Optional<User> friend = userDaoRepository.findById(friendsIdDto.getFriendId());
 
         if (user.isPresent() && friend.isPresent()) {
+
+
             friendRepository.save(new Friend(user.get(), friend.get(), "pending"));
             return new ApiResponse<>(200,"Friend request sent", null);
         }
@@ -49,10 +51,13 @@ public class FriendService {
             Friend friend1 = friendRepository.findByUserAndFriend(friendsIdDto.getUserId(),friendsIdDto.getFriendId());
             friend1.setStatus("accepted");
 
+            User user1 = user.get();
+            User user2 = friend.get();
+            setNoOfFriends(user1,user2);
             if (friend1 != null) {
                 try {
                     friendRepository.saveAll(
-                            Arrays.asList(new Friend(user.get(), friend.get(), "accepted"),
+                            Arrays.asList(new Friend(user1, user2, "accepted"),
                                     friend1));
                     return new ApiResponse(200,"Friend Request accepted",null);
 
@@ -77,7 +82,16 @@ public class FriendService {
 
 
     public ApiResponse removeFriend(FriendsIdDto friendsIdDto){
+        Optional<User> user = userDaoRepository.findById(friendsIdDto.getUserId());
+        Optional<User> friend = userDaoRepository.findById(friendsIdDto.getFriendId());
+        if (user.isPresent() && friend.isPresent()) {
+            User user1 = user.get();
+            User user2 = friend.get();
 
+            if(user1.getNoOfFriends() > 0 && user2.getNoOfFriends() > 0){
+                removeNoOfFriends(user1,user2);
+            }
+        }
         friendRepository.removeFriend(friendsIdDto.getUserId(),friendsIdDto.getFriendId());
         return new ApiResponse(200,"Request Canceled",null);
     }
@@ -93,5 +107,25 @@ public class FriendService {
     }
 
 
+    public void  setNoOfFriends(User user1,User user2){
 
+        Integer no1 = friendRepository.findAllNoOfFriends(user1.getId()) + 1;
+        Integer no2 = friendRepository.findAllNoOfFriends(user2.getId()) + 1;
+        user1.setNoOfFriends(no1);
+        user2.setNoOfFriends(no2);
+        userDaoRepository.save(user1);
+        userDaoRepository.save(user2);
+
+    }
+
+    public void  removeNoOfFriends(User user1,User user2){
+
+        Integer no1 = friendRepository.findAllNoOfFriends(user1.getId()) - 1;
+        Integer no2 = friendRepository.findAllNoOfFriends(user2.getId()) - 1;
+        user1.setNoOfFriends(no1);
+        user2.setNoOfFriends(no2);
+        userDaoRepository.save(user1);
+        userDaoRepository.save(user2);
+
+    }
 }

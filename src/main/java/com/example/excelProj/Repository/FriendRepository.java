@@ -32,4 +32,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     @Query(value = "delete from friend where (user_id=:userId AND friend_id=:friendId) OR (user_id=:friendId AND friend_id=:userId)",nativeQuery = true)
     public void removeFriend(@Param("userId") Long userId, @Param("friendId") Long friendId);
 
+    @Query(value = "select count(*) from friend where user_id=:userId AND status='accepted'",nativeQuery = true)
+    public Integer findAllNoOfFriends(@Param("userId") Long userId);
+
 }
