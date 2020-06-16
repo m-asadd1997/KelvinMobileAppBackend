@@ -34,6 +34,10 @@ public class User {
 
     private Integer noOfFriends;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    List<Post> posts;
+
 
     @OneToMany(mappedBy = "userObj", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -138,5 +142,14 @@ public class User {
 
     public void setNoOfFriends(Integer noOfFriends) {
         this.noOfFriends = noOfFriends;
+    }
+
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }
