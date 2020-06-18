@@ -35,4 +35,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     @Query(value = "select count(*) from friend where user_id=:userId AND status='accepted'",nativeQuery = true)
     public Integer findAllNoOfFriends(@Param("userId") Long userId);
 
+
+    @Query(value = "select count(*) from friend where friend_id=:id AND status='pending'",nativeQuery = true)
+    Long getNotificationCount(@Param("id") Long id);
 }

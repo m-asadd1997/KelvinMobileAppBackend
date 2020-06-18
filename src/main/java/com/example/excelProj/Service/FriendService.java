@@ -72,12 +72,11 @@ public class FriendService {
 
     public ApiResponse getAllRequests(Long userId){
         List<Friend> friends = friendRepository.findAllUserRequests(userId);
-        if(!friends.isEmpty()){
+
             return new ApiResponse(200,"Friend Reqs found",friends);
-        }
-        else{
-            return new ApiResponse(400,"No Reqs found",null);
-        }
+
+
+
     }
 
 
@@ -127,5 +126,10 @@ public class FriendService {
         userDaoRepository.save(user1);
         userDaoRepository.save(user2);
 
+    }
+
+    public ApiResponse<Long> getNotificationCount(Long id)
+    {
+        return new ApiResponse<>(200,"Notifications found",friendRepository.getNotificationCount(id));
     }
 }

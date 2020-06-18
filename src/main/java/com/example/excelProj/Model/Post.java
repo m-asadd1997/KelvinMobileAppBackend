@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Post {
@@ -19,16 +20,26 @@ public class Post {
     @Lob
     byte[] image;
 
+
+    String type;
+
+    String url;
+
+    Date date;
+
     @JsonIgnoreProperties("posts")
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
 
-    public Post(String description, byte[] image) {
+    public Post(String description, byte[] image, String type, String url, Date date, User user) {
         this.description = description;
         this.image = image;
+        this.type = type;
+        this.url = url;
+        this.date = date;
+        this.user = user;
     }
-
 
     public Long getId() {
         return id;
