@@ -22,10 +22,10 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     @Query("select new com.example.excelProj.Dto.PostDto(p.id,p.description,p.user.id,p.user.profilePicture,p.user.name,p.image,p.type,p.url,p.date) from Post p, User u where p.user.id = u.id and p.user.id in ( select un.id from User un left join Friend fa on fa.userObj.id = un.id where un.id = :id or fa.friend.id = :id and fa.status='accepted') and p.type='USER' order by p.date ASC")
     List<PostDto> getAllUserPosts(@Param("id") Long id);
 
-    @Query("select new com.example.excelProj.Dto.PostDto(p.id,p.description,f.friend.id,f.friend.profilePicture,f.friend.name,p.image," +
+    @Query("select new com.example.excelProj.Dto.PostDto(p.id,p.description,u.id,u.profilePicture,u.name,p.image," +
             "p.type,p.url,p.date) " +
-            "from Post p join Friend f on" +
-            " p.user.id=f.friend.id where p.type='BUSINESS'")
+            "from Post p join User u on" +
+            " p.user.id=u.id where p.type='BUSINESS'")
     List<PostDto> findAllBusinessPosts();
 
 

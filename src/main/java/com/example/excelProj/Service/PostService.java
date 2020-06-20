@@ -42,7 +42,7 @@ public class PostService {
                 Post post = new Post(postDto.getDescription(), postDto.getImage(), "USER", null, new Date(), user.get());
                 postRepository.save(post);
                 return new ResponseEntity<>("\"Post Submitted\"", HttpStatus.OK);
-            } else if (user.get().getUserType().equalsIgnoreCase("ADMIN")) {
+            } else if (user.get().getUserType().equalsIgnoreCase("Business User")) {
                 Post post = new Post(postDto.getDescription(), postDto.getImage(), "BUSINESS", postDto.getUrl(), new Date(), user.get());
                 postRepository.save(post);
                 return new ResponseEntity<>("\"Post Submitted\"", HttpStatus.OK);
