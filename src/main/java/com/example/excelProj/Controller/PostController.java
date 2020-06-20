@@ -17,17 +17,23 @@ public class PostController {
     @Autowired
     PostService postService;
 
-    @PostMapping("/post")
-    public ResponseEntity<String> submitUserPost(@RequestBody PostDto postDto)
-    { return postService.submitUserPost(postDto);}
+    @PostMapping("/post/{id}")
+    public ResponseEntity<String> submitUserPost(@PathVariable("id") Long userId , @RequestBody PostDto postDto)
+    { return postService.submitUserPost(userId,postDto);}
 
 
-    @GetMapping("/user-post/{id}")
-    public ResponseEntity<List<PostDto>> getAllUserPosts(@RequestParam("id") Long id)
+    @GetMapping("/user-posts/{id}")
+    public ResponseEntity<List<PostDto>> getAllUserPosts(@PathVariable("id") Long id)
     { return postService.getAllUserPosts(id);}
 
-    @GetMapping("/business-post")
+    @GetMapping("/business-posts")
     public ResponseEntity<List<PostDto>> getAllBusinessPosts()
     { return postService.getAllBusinessPosts();}
+
+    @GetMapping("/post/{id}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable("id") Long id)
+    {
+        return postService.getPostById(id);
+    }
 
 }

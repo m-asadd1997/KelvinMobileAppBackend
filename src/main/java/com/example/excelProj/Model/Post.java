@@ -14,6 +14,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(columnDefinition = "LONGTEXT")
     String description;
 
 
@@ -39,6 +40,9 @@ public class Post {
         this.url = url;
         this.date = date;
         this.user = user;
+    }
+
+    public Post() {
     }
 
     public Long getId() {
