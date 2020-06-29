@@ -43,6 +43,10 @@ public class User {
 	@JsonIgnore
     private List<Friend> friendList;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<ProfileGallery> profileGalleries;
+
 
     public User(String email, String name, String password, Boolean active, String userType) {
 
@@ -151,5 +155,13 @@ public class User {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public List<ProfileGallery> getProfileGalleries() {
+        return profileGalleries;
+    }
+
+    public void setProfileGalleries(List<ProfileGallery> profileGalleries) {
+        this.profileGalleries = profileGalleries;
     }
 }
