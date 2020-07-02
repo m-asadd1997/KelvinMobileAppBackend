@@ -24,4 +24,6 @@ public interface ChatroomRepository extends JpaRepository<Chatroom,Long> {
 //            "order by c.date desc")
 //    List<ChatroomDTO> findChatrooms(@Param("id") Long id);
 
+
+
 }
