@@ -6,4 +6,5 @@ public class Constants {
     public static final String SIGNING_KEY = "madinaaaps";
     public static final String TOKEN_PREFIX = "";
     public static final String HEADER_STRING = "Authorization";
+    public  static   String SERVER_PATH= "";
 }

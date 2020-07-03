@@ -58,4 +58,12 @@ public class FriendController {
         return friendService.getAllFriends(userId);
     }
 
+    @GetMapping("/get-all-friends-status/{id}")
+    public ApiResponse getAllFriendsAndStatus(@PathVariable("id")  Long userId) {
+        return friendService.getAllFriendsAndStatus(userId);
+    }
+
+    @GetMapping("/get-notification-count/{id}")
+    public ApiResponse<Long> getNotificationCount(@PathVariable("id") Long userId)
+    {return friendService.getNotificationCount(userId);}
 }

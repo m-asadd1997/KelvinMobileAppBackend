@@ -49,13 +49,6 @@ public class Friend {
         this.status = status;
     }
 
-    public User getUser() {
-        return userObj;
-    }
-
-    public void setUser(User userObj) {
-        this.userObj = userObj;
-    }
 
     public User getFriend() {
         return friend;

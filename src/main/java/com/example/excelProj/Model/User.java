@@ -34,10 +34,18 @@ public class User {
 
     private Integer noOfFriends;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    List<Post> posts;
+
 
     @OneToMany(mappedBy = "userObj", cascade = CascadeType.ALL)
 	@JsonIgnore
     private List<Friend> friendList;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<ProfileGallery> profileGalleries;
 
 
     public User(String email, String name, String password, Boolean active, String userType) {
@@ -138,5 +146,22 @@ public class User {
 
     public void setNoOfFriends(Integer noOfFriends) {
         this.noOfFriends = noOfFriends;
+    }
+
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<ProfileGallery> getProfileGalleries() {
+        return profileGalleries;
+    }
+
+    public void setProfileGalleries(List<ProfileGallery> profileGalleries) {
+        this.profileGalleries = profileGalleries;
     }
 }
