@@ -15,6 +15,7 @@ public class ExcelProjApplication extends SpringBootServletInitializer {
 //SpringBootServletInitializer
 	public static void main(String[] args) {
 		SpringApplication.run(ExcelProjApplication.class, args);
+
 		final String dir = System.getProperty("user.dir");
 		System.out.println("current dir = " + dir);
 
