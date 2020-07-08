@@ -47,6 +47,10 @@ public class User {
     @JsonIgnore
     private List<ProfileGallery> profileGalleries;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Event> events;
+
 
     public User(String email, String name, String password, Boolean active, String userType) {
 
@@ -57,10 +61,18 @@ public class User {
         this.userType = userType;
     }
 
+    public User(Long id, String email, String name, String password, Boolean active, String userType, String description, byte[] profilePicture) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.active = active;
+        this.userType = userType;
+        this.description = description;
+        this.profilePicture = profilePicture;
+    }
 
-
-
-	public List<Friend> getFriendList() {
+    public List<Friend> getFriendList() {
 		return friendList;
 	}
 
@@ -163,5 +175,13 @@ public class User {
 
     public void setProfileGalleries(List<ProfileGallery> profileGalleries) {
         this.profileGalleries = profileGalleries;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 }
