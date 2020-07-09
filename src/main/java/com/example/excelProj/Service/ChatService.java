@@ -1,6 +1,7 @@
 package com.example.excelProj.Service;
 
 import com.example.excelProj.Commons.ResponseDTO;
+import com.example.excelProj.Dto.ChatroomDto;
 import com.example.excelProj.Model.Chat;
 import com.example.excelProj.Model.Chatroom;
 import com.example.excelProj.Model.User;
@@ -66,18 +67,21 @@ public class ChatService {
         return new ResponseEntity("\"Messages seen\"", HttpStatus.OK);
     }
 
+    public ResponseEntity getAllUserChatrooms(Long id){
+      return new ResponseEntity( chatroomRepository.findChatrooms(id),HttpStatus.OK);
+    }
 
 
-//    public ResponseEntity getChatCount(Long id){
-//        List<ChatroomDTO> chatroomDTOList=chatroomRepository.findChatrooms(id);
-//
-//        Long count= chatroomDTOList
-//                .stream()
-//                .filter((chatroomDTO)->chatroomDTO.getSender()!=id && chatroomDTO.getSeen().equals(false))
-//                .count();
-//        return new ResponseEntity(count, HttpStatus.OK);
-//
-//
-//    }
+    public ResponseEntity getChatCount(Long id){
+        List<ChatroomDto> chatroomDTOList=chatroomRepository.findChatrooms(id);
+
+        Long count= chatroomDTOList
+                .stream()
+                .filter((chatroomDTO)->chatroomDTO.getSender()!=id && chatroomDTO.getSeen().equals(false))
+                .count();
+        return new ResponseEntity(count, HttpStatus.OK);
+
+
+    }
 }
 

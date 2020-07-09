@@ -83,5 +83,13 @@ public class ChatController {
         }
     }
 
+    @GetMapping("/get-all-chatrooms/{id}")
+    public ResponseEntity getAllUserChatrooms(@PathVariable("id") Long id)
+    { return chatService.getAllUserChatrooms(id); }
+
+    @GetMapping("/get-chat-count/{id}")
+    public ResponseEntity getChatCount(@PathVariable("id") Long id)
+    { return chatService.getChatCount(id); }
+
 
 }
