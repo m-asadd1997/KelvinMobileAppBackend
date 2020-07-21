@@ -38,7 +38,7 @@ public class EventService {
     }
 
     public ApiResponse getAllEvents(){
-        List<Event> events = eventRepository.findAll();
+        List<Event> events = eventRepository.findAllEvents();
         if(!events.isEmpty()){
             return new ApiResponse(200,"Events found",events);
         }

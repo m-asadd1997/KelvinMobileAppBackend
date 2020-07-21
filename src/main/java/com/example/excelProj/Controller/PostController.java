@@ -1,5 +1,7 @@
 package com.example.excelProj.Controller;
 
+import com.example.excelProj.Commons.ApiResponse;
+import com.example.excelProj.Dto.EventDto;
 import com.example.excelProj.Dto.PostDto;
 import com.example.excelProj.Repository.PostRepository;
 import com.example.excelProj.Service.PostService;
@@ -19,7 +21,9 @@ public class PostController {
 
     @PostMapping("/post/{id}")
     public ResponseEntity<String> submitUserPost(@PathVariable("id") Long userId , @RequestBody PostDto postDto)
-    { return postService.submitUserPost(userId,postDto);}
+    {
+        return postService.submitUserPost(userId,postDto);
+    }
 
 
     @GetMapping("/user-posts/{id}")
@@ -34,6 +38,16 @@ public class PostController {
     public ResponseEntity<PostDto> getPostById(@PathVariable("id") Long id)
     {
         return postService.getPostById(id);
+    }
+
+    @DeleteMapping("/post/delete-post/{id}")
+    public ApiResponse deletePostById(@PathVariable("id") Long id){
+        return postService.deletePost(id);
+    }
+
+    @PutMapping("/post/update-post/{id}")
+    public ApiResponse updatePost(@PathVariable("id") Long id,@RequestBody PostDto postDto){
+        return postService.editUserPost(id,postDto);
     }
 
 }

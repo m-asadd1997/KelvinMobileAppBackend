@@ -4,6 +4,7 @@ import com.example.excelProj.Commons.ApiResponse;
 import com.example.excelProj.Config.WebsocketConfig;
 import com.example.excelProj.Dto.FriendDto;
 import com.example.excelProj.Dto.FriendsIdDto;
+import com.example.excelProj.Dto.NotificationDto;
 import com.example.excelProj.Model.Friend;
 import com.example.excelProj.Model.User;
 import com.example.excelProj.Repository.FriendRepository;
@@ -11,6 +12,7 @@ import com.example.excelProj.Repository.UserDaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -21,12 +23,20 @@ import java.util.stream.Collectors;
 @Service
 public class FriendService {
 
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     @Autowired
     FriendRepository friendRepository;
 
 
     @Autowired
     UserDaoRepository userDaoRepository;
+
+
+    @Autowired
+    NotificationService notificationService;
 
     @Autowired
     WebsocketConfig websocketConfig;
@@ -36,10 +46,14 @@ public class FriendService {
         Optional<User> user = userDaoRepository.findById(friendsIdDto.getUserId());
         Optional<User> friend = userDaoRepository.findById(friendsIdDto.getFriendId());
 
+
         if (user.isPresent() && friend.isPresent()) {
 
 
             friendRepository.save(new Friend(user.get(), friend.get(), "pending"));
+            notificationService.saveNotification(populateNotificationDto(user.get(),friend.get()));
+            simpMessagingTemplate.convertAndSend("/topic/notification/" + friend.get().getId(),
+                    notificationService.getLiveNotification(friend.get().getId(),"request",user.get().getId()));
             return new ApiResponse<>(200, "Friend request sent", null);
         }
         return new ApiResponse<>(400, "An Error occured while sending th request", null);
@@ -65,6 +79,7 @@ public class FriendService {
                     friendRepository.saveAll(
                             Arrays.asList(new Friend(user1, user2, "accepted"),
                                     friend1));
+//                    notificationService.deletNotification(friendsIdDto.getNotificationId());
                     return new ApiResponse(200, "Friend Request accepted", null);
 
                 } catch (Exception e) {
@@ -97,6 +112,7 @@ public class FriendService {
             }
         }
         friendRepository.removeFriend(friendsIdDto.getUserId(), friendsIdDto.getFriendId());
+//        notificationService.deletNotification(friendsIdDto.getNotificationId());
         return new ApiResponse(200, "Request Canceled", null);
     }
 
@@ -168,4 +184,14 @@ public class FriendService {
 
     public Boolean isActive (FriendDto friendDto)
     { return websocketConfig.onlineUsers.contains(friendDto.getEmail())?true:false; }
+
+    public NotificationDto populateNotificationDto(User from, User to){
+
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setNotificationFrom(from);
+        notificationDto.setType("request");
+        notificationDto.setMessage(from.getName() + " sent you a friend request");
+        notificationDto.setNotificationTo(to);
+        return notificationDto;
+    }
 }

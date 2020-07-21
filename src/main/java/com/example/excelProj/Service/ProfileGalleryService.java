@@ -46,7 +46,7 @@ public class ProfileGalleryService {
             User user1 = user.get();
             ProfileGallery profileGallery = new ProfileGallery();
             if(saveImage(profileGalleryDto.getGalleryImage(),user1.getName(),user1.getId(),unique)) {
-                profileGallery.setGalleryImage(galleryImageUrl+user1.getId()+"-"+user1.getName()+"/"+unique+profileGalleryDto.getGalleryImage().getOriginalFilename());
+                profileGallery.setGalleryImage(Constants.galleryImagePath+user1.getId()+"-"+user1.getName()+"/"+unique+profileGalleryDto.getGalleryImage().getOriginalFilename());
                 profileGallery.setUser(user1);
                 profileGallery.setDate(new Date());
                 profileGalleryRepository.save(profileGallery);

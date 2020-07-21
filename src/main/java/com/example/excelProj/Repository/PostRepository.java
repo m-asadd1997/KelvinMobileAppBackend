@@ -19,13 +19,13 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 ////            "AND f.status='accepted' AND p.type='USER' ) OR (p.user.id=:id)")
 ////    List<PostDto> getAllUserPosts(@Param("id") Long id);
 
-    @Query("select new com.example.excelProj.Dto.PostDto(p.id,p.description,p.user.id,p.user.profilePicture,p.user.name,p.image,p.type,p.url,p.date) from Post p, User u where p.user.id = u.id and p.user.id in ( select un.id from User un left join Friend fa on fa.userObj.id = un.id where un.id = :id or fa.friend.id = :id and fa.status='accepted') and p.type='USER' order by p.date ASC")
+    @Query("select new com.example.excelProj.Dto.PostDto(p.id,p.description,p.user.id,p.user.profilePicture,p.user.name,p.image,p.type,p.url,p.date) from Post p, User u where p.user.id = u.id and p.user.id in ( select un.id from User un left join Friend fa on fa.userObj.id = un.id where un.id = :id or fa.friend.id = :id and fa.status='accepted') and p.type='USER' order by p.date DESC")
     List<PostDto> getAllUserPosts(@Param("id") Long id);
 
     @Query("select new com.example.excelProj.Dto.PostDto(p.id,p.description,u.id,u.profilePicture,u.name,p.image," +
             "p.type,p.url,p.date) " +
             "from Post p join User u on" +
-            " p.user.id=u.id where p.type='BUSINESS'")
+            " p.user.id=u.id where p.type='BUSINESS' order by p.date DESC")
     List<PostDto> findAllBusinessPosts();
 
 
