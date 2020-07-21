@@ -3,6 +3,7 @@ package com.example.excelProj.Dto;
 public class FriendsIdDto {
     Long userId;
     Long friendId;
+    Long notificationId;
 
     public FriendsIdDto() {
     }
@@ -21,5 +22,13 @@ public class FriendsIdDto {
 
     public void setFriendId(Long friendId) {
         this.friendId = friendId;
+    }
+
+    public Long getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(Long notificationId) {
+        this.notificationId = notificationId;
     }
 }

@@ -51,6 +51,13 @@ public class User {
     @JsonIgnore
     private List<Event> events;
 
+    @OneToMany(mappedBy = "notificationTo")
+    @JsonIgnore
+    private List<Notification> notifications;
+
+    @OneToMany(mappedBy = "notificationFrom")
+    @JsonIgnore
+    private List<Notification> notificationFrom;
 
     public User(String email, String name, String password, Boolean active, String userType) {
 
@@ -183,5 +190,21 @@ public class User {
 
     public void setEvents(List<Event> events) {
         this.events = events;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public List<Notification> getNotificationFrom() {
+        return notificationFrom;
+    }
+
+    public void setNotificationFrom(List<Notification> notificationFrom) {
+        this.notificationFrom = notificationFrom;
     }
 }

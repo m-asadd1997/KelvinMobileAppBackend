@@ -9,6 +9,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
 @ComponentScan
 @SpringBootApplication
 public class ExcelProjApplication extends SpringBootServletInitializer {
@@ -18,6 +21,7 @@ public class ExcelProjApplication extends SpringBootServletInitializer {
 
 		final String dir = System.getProperty("user.dir");
 		System.out.println("current dir = " + dir);
+		System.out.println("Current path = " + Constants.galleryImagePath);
 
 		Constants.SERVER_PATH = dir;
 	}

@@ -10,6 +10,7 @@ import com.example.excelProj.Repository.UserDaoRepository;
 import com.example.excelProj.Service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 //import sun.reflect.generics.repository.FieldRepository;
 
@@ -29,6 +30,7 @@ public class FriendController {
 
     @PostMapping("/send-request")
     public ApiResponse sendRequest(@RequestBody FriendsIdDto friendsIdDto) {
+
      return friendService.sendRequest(friendsIdDto);
     }
 
