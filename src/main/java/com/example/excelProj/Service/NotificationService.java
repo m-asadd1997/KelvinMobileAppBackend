@@ -8,6 +8,7 @@ import com.example.excelProj.Model.Notification;
 import com.example.excelProj.Model.User;
 import com.example.excelProj.Repository.FriendRepository;
 import com.example.excelProj.Repository.NotificationRepository;
+import com.example.excelProj.Repository.UserDaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class NotificationService {
 
     @Autowired
     FriendRepository friendRepository;
+
+    @Autowired
+    UserDaoRepository userDaoRepository;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -61,6 +65,7 @@ public class NotificationService {
                 notification.setSeen(false);
                 notification.setDate(new Date());
                 notification.setType("post");
+                saveNotificationNumberForUser(friend.getFriend());
                 Notification alredyAddednotification = notificationRepository.getAlreadyAddedNotification(notificationDto.getMessage(),friend.getFriend().getId());
                 if(alredyAddednotification != null){
                     notificationRepository.setSeenNotification(alredyAddednotification.getId());
@@ -123,6 +128,11 @@ public class NotificationService {
 
     public ApiResponse<Long> getNotificationCount(Long id) {
         return new ApiResponse<>(200, "Notifications found", notificationRepository.getNotificationCount(id));
+    }
+
+    public void saveNotificationNumberForUser(User user){
+        user.setNumberOfNotifications(user.getNumberOfNotifications() + 1);
+        userDaoRepository.save(user);
     }
 
 

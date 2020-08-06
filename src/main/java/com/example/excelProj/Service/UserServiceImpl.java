@@ -1,11 +1,11 @@
 package com.example.excelProj.Service;
 
-import com.example.excelProj.Model.Friend;
-import com.example.excelProj.Repository.FriendRepository;
-import com.example.excelProj.Repository.UserDaoRepository;
 import com.example.excelProj.Commons.ApiResponse;
 import com.example.excelProj.Dto.UserDto;
+import com.example.excelProj.Model.Friend;
 import com.example.excelProj.Model.User;
+import com.example.excelProj.Repository.FriendRepository;
+import com.example.excelProj.Repository.UserDaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -94,6 +93,8 @@ public class UserServiceImpl implements UserDetailsService {
 			newUser.setUserType(user.getUserType());
 			newUser.setActive(user.getActive());
 			newUser.setNoOfFriends(0);
+			newUser.setNumberOfFriendRequests(0);
+			newUser.setNumberOfNotifications(0);
 			return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",	userDaoRepository.save(newUser));//return ;
 		}else{
 			return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "User Already exsist.",null);//return ;
@@ -208,6 +209,27 @@ public class UserServiceImpl implements UserDetailsService {
 		}
 	}
 
+
+	public ApiResponse setUserFirebaseToken(Long id,UserDto userDto){
+		Optional<User> user = userDaoRepository.findById(id);
+		if(user.isPresent()){
+			User user1 = user.get();
+			user1.setFirebaseToken(userDto.getFirebaseToken());
+			return new ApiResponse(200,"Firebase Token set",userDaoRepository.save(user1));
+		}
+		return new ApiResponse(400,"User not found",null);
+ 	}
+
+ 	public ApiResponse updateNoOfNotifications(Long id,UserDto userDto){
+		Optional<User> user = userDaoRepository.findById(id);
+		if(user.isPresent()) {
+			User user1 = user.get();
+			user1.setNumberOfNotifications(userDto.getNumberOfNotifications());
+			user1.setNumberOfFriendRequests(userDto.getNumberOfFriendRequests());
+			return new ApiResponse(200,"number of notifications updated",userDaoRepository.save(user1));
+		}
+		return new ApiResponse(400,"User not found",null);
+	}
 
 
 }

@@ -100,4 +100,15 @@ public class AuthenticationController {
     public ApiResponse saveProfileDescription(@RequestBody UserDto userDto){
         return userService.saveProfileDescription(userDto);
     }
+
+    @PutMapping("/set-firebase-token/{id}")
+    public ApiResponse saveFireBaseToken(@PathVariable("id") Long id,@RequestBody UserDto userDto){
+        return userService.setUserFirebaseToken(id,userDto);
+    }
+
+    @PutMapping("update-notificationscount/{id}")
+    public  ApiResponse updateNotificationsCount(@PathVariable("id") Long id,@RequestBody UserDto userDto){
+        return userService.updateNoOfNotifications(id, userDto);
+    }
+
 }

@@ -28,7 +28,7 @@ public interface NotificationRepository extends JpaRepository<Notification,Long>
     @Query(value = "select * from notification where message=:msg and to_user_id=:id and seen = false",nativeQuery = true)
     public Notification getAlreadyAddedNotification(@Param("msg") String message, @Param("id") Long id);
 
-    @Query(value = "select * from notification where to_user_id =:id",nativeQuery = true)
+    @Query(value = "select * from notification where to_user_id =:id and type='post'",nativeQuery = true)
     public List<Notification> getAllNotifications(@Param("id") Long id);
 
     @Query(value = "select count(*) from notification where to_user_id=:id",nativeQuery = true)

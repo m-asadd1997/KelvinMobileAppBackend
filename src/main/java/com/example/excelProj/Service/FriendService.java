@@ -2,18 +2,17 @@ package com.example.excelProj.Service;
 
 import com.example.excelProj.Commons.ApiResponse;
 import com.example.excelProj.Config.WebsocketConfig;
-import com.example.excelProj.Dto.FriendDto;
-import com.example.excelProj.Dto.FriendsIdDto;
-import com.example.excelProj.Dto.NotificationDto;
+import com.example.excelProj.Dto.*;
 import com.example.excelProj.Model.Friend;
 import com.example.excelProj.Model.User;
 import com.example.excelProj.Repository.FriendRepository;
 import com.example.excelProj.Repository.UserDaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +40,9 @@ public class FriendService {
     @Autowired
     WebsocketConfig websocketConfig;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     public ApiResponse sendRequest(FriendsIdDto friendsIdDto) {
 
         Optional<User> user = userDaoRepository.findById(friendsIdDto.getUserId());
@@ -49,11 +51,23 @@ public class FriendService {
 
         if (user.isPresent() && friend.isPresent()) {
 
-
+            NotificationBody notificationBody = new NotificationBody();
+            NotificationObject notificationObject = new NotificationObject();
             friendRepository.save(new Friend(user.get(), friend.get(), "pending"));
-            notificationService.saveNotification(populateNotificationDto(user.get(),friend.get()));
+//            notificationService.saveNotification(populateNotificationDto(user.get(),friend.get()));
             simpMessagingTemplate.convertAndSend("/topic/notification/" + friend.get().getId(),
                     notificationService.getLiveNotification(friend.get().getId(),"request",user.get().getId()));
+            notificationObject.setTitle(friendsIdDto.getNotificationTitle());
+            notificationObject.setBody(friendsIdDto.getNotificationBody());
+            notificationBody.setNotification(notificationObject);
+            notificationBody.setTo(friend.get().getFirebaseToken());
+            System.out.println(notificationBody);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/json");
+            headers.set("Authorization","key=AAAA81_riiM:APA91bF8FtqkcElESD0Uh9bBY2IjGJsD4gHp7X5SIpyE66peD9pya6O3Mq7xlFZdMmlAlb8oFp9XSedYyrR5ImiUqep40g_GYBiXfjvjzcpm8ZpxyPjPK74Y4E0gK2uEnJk17-wMLmCJ");
+            HttpEntity httpEntity = new HttpEntity(notificationBody, headers);
+//            String resp =restTemplate.postForObject("https://fcm.googleapis.com/fcm/send", httpEntity,String.class);
+            saveFriendRequestNumberForUser(friend.get());
             return new ApiResponse<>(200, "Friend request sent", null);
         }
         return new ApiResponse<>(400, "An Error occured while sending th request", null);
@@ -193,5 +207,10 @@ public class FriendService {
         notificationDto.setMessage(from.getName() + " sent you a friend request");
         notificationDto.setNotificationTo(to);
         return notificationDto;
+    }
+
+    public void saveFriendRequestNumberForUser(User user){
+        user.setNumberOfFriendRequests(user.getNumberOfFriendRequests() + 1);
+        userDaoRepository.save(user);
     }
 }
