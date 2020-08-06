@@ -4,6 +4,9 @@ public class FriendsIdDto {
     Long userId;
     Long friendId;
     Long notificationId;
+    String notificationTitle;
+    String notificationBody;
+
 
     public FriendsIdDto() {
     }
@@ -30,5 +33,21 @@ public class FriendsIdDto {
 
     public void setNotificationId(Long notificationId) {
         this.notificationId = notificationId;
+    }
+
+    public String getNotificationTitle() {
+        return notificationTitle;
+    }
+
+    public void setNotificationTitle(String notificationTitle) {
+        this.notificationTitle = notificationTitle;
+    }
+
+    public String getNotificationBody() {
+        return notificationBody;
+    }
+
+    public void setNotificationBody(String notificationBody) {
+        this.notificationBody = notificationBody;
     }
 }

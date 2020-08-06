@@ -1,10 +1,10 @@
 package com.example.excelProj.Model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -26,8 +26,13 @@ public class User {
     @Column
     private String userType;
 
+    private Integer numberOfNotifications;
+    private Integer numberOfFriendRequests;
+
 
     private String description;
+
+    private String firebaseToken;
 
     @Lob
     private byte[] profilePicture;
@@ -206,5 +211,29 @@ public class User {
 
     public void setNotificationFrom(List<Notification> notificationFrom) {
         this.notificationFrom = notificationFrom;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
+    }
+
+    public Integer getNumberOfNotifications() {
+        return numberOfNotifications;
+    }
+
+    public void setNumberOfNotifications(Integer numberOfNotifications) {
+        this.numberOfNotifications = numberOfNotifications;
+    }
+
+    public Integer getNumberOfFriendRequests() {
+        return numberOfFriendRequests;
+    }
+
+    public void setNumberOfFriendRequests(Integer numberOfFriendRequests) {
+        this.numberOfFriendRequests = numberOfFriendRequests;
     }
 }

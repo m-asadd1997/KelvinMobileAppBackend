@@ -25,7 +25,7 @@ public class MyRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         repository.save(new User("admin","admin",bcryptEncoder.encode("admin"),true,"admin"));
         String ip = InetAddress.getLocalHost().getHostAddress();
-        Constants.galleryImagePath = "http://"+ip+":8080/api/gallery/";
+        Constants.galleryImagePath = "https://"+ip+":8447/api/gallery/";
 
     }
 }

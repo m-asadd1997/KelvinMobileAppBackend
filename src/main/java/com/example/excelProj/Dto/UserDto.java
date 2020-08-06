@@ -12,6 +12,9 @@ public class UserDto {
 	private String description;
 	@Lob
 	private byte[] profilePicture;
+	private String firebaseToken;
+	private Integer numberOfNotifications;
+	private Integer numberOfFriendRequests;
 
 	public UserDto(String name, String email, String password, Boolean active, String userType) {
 		this.name = name;
@@ -79,5 +82,29 @@ public class UserDto {
 
 	public void setProfilePicture(byte[] profilePicture) {
 		this.profilePicture = profilePicture;
+	}
+
+	public String getFirebaseToken() {
+		return firebaseToken;
+	}
+
+	public void setFirebaseToken(String firebaseToken) {
+		this.firebaseToken = firebaseToken;
+	}
+
+	public Integer getNumberOfNotifications() {
+		return numberOfNotifications;
+	}
+
+	public void setNumberOfNotifications(Integer numberOfNotifications) {
+		this.numberOfNotifications = numberOfNotifications;
+	}
+
+	public Integer getNumberOfFriendRequests() {
+		return numberOfFriendRequests;
+	}
+
+	public void setNumberOfFriendRequests(Integer numberOfFriendRequests) {
+		this.numberOfFriendRequests = numberOfFriendRequests;
 	}
 }
