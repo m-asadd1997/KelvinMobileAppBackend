@@ -2,7 +2,10 @@ package com.example.excelProj.Service;
 
 import com.example.excelProj.Commons.ApiResponse;
 import com.example.excelProj.Config.WebsocketConfig;
+import com.example.excelProj.Dto.NotificationBody;
 import com.example.excelProj.Dto.NotificationDto;
+import com.example.excelProj.Dto.NotificationObject;
+import com.example.excelProj.Dto.PostDto;
 import com.example.excelProj.Model.Friend;
 import com.example.excelProj.Model.Notification;
 import com.example.excelProj.Model.User;
@@ -10,8 +13,11 @@ import com.example.excelProj.Repository.FriendRepository;
 import com.example.excelProj.Repository.NotificationRepository;
 import com.example.excelProj.Repository.UserDaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
@@ -35,6 +41,10 @@ public class NotificationService {
     @Autowired
     WebsocketConfig websocketConfig;
 
+    @Autowired
+    RestTemplate restTemplate;
+
+
 
     public ApiResponse saveNotification(NotificationDto notificationDto){
 
@@ -52,7 +62,7 @@ public class NotificationService {
         return new ApiResponse(200,"Notification saved",notificationRepository.save(notification));
     }
 
-    public ApiResponse savePostNotification(NotificationDto notificationDto){
+    public ApiResponse savePostNotification(NotificationObject notificationObject,NotificationBody notificationBody, PostDto postDto,NotificationDto notificationDto){
 
         List<Friend> friends = friendRepository.findAllFriends(notificationDto.getNotificationFrom().getId());
 
@@ -72,10 +82,24 @@ public class NotificationService {
                 }
                 notificationRepository.save(notification);
                 simpMessagingTemplate.convertAndSend("/topic/post-notification/" + friend.getFriend().getId(),getLiveNotification(friend.getFriend().getId(),"post",notificationDto.getNotificationFrom().getId()));
+                sendPushNotification(notificationBody,notificationObject,postDto,friend.getFriend());
             });
             return new ApiResponse(200,"Notification saved",null);
         }
         return new ApiResponse(400,"Notification not saved",null);
+    }
+
+    public void sendPushNotification(NotificationBody notificationBody, NotificationObject notificationObject, PostDto postDto, User user){
+        notificationObject.setTitle(postDto.getNotificationTitle());
+        notificationObject.setBody(postDto.getNotificationBody());
+        notificationBody.setNotification(notificationObject);
+        notificationBody.setTo(user.getFirebaseToken());
+        System.out.println(notificationBody);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("Authorization","key=AAAA81_riiM:APA91bF8FtqkcElESD0Uh9bBY2IjGJsD4gHp7X5SIpyE66peD9pya6O3Mq7xlFZdMmlAlb8oFp9XSedYyrR5ImiUqep40g_GYBiXfjvjzcpm8ZpxyPjPK74Y4E0gK2uEnJk17-wMLmCJ");
+        HttpEntity httpEntity = new HttpEntity(notificationBody, headers);
+        String resp =restTemplate.postForObject("https://fcm.googleapis.com/fcm/send", httpEntity,String.class);
     }
 
     public ApiResponse getLiveNotification(Long toUserId,String type,Long fromUserId){

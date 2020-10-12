@@ -9,6 +9,8 @@ import com.example.excelProj.Repository.UserDaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +36,9 @@ public class UserServiceImpl implements UserDetailsService {
 
 	@Autowired
 	FriendRepository friendRepository;
+
+	@Autowired
+	JavaMailSender javaMailSender;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userDaoRepository.findByEmail(username);
@@ -95,7 +100,14 @@ public class UserServiceImpl implements UserDetailsService {
 			newUser.setNoOfFriends(0);
 			newUser.setNumberOfFriendRequests(0);
 			newUser.setNumberOfNotifications(0);
-			return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",	userDaoRepository.save(newUser));//return ;
+			try {
+				mailToUser(user.getEmail());
+				return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",	userDaoRepository.save(newUser));
+			}catch (Exception e){
+				System.out.println(e);
+				return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully but email not sent.",	userDaoRepository.save(newUser));
+			}
+			//return ;
 		}else{
 			return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "User Already exsist.",null);//return ;
 		}
@@ -229,6 +241,24 @@ public class UserServiceImpl implements UserDetailsService {
 			return new ApiResponse(200,"number of notifications updated",userDaoRepository.save(user1));
 		}
 		return new ApiResponse(400,"User not found",null);
+	}
+
+
+	void mailToUser(String recevierEmail) {
+
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setTo(recevierEmail);
+
+		msg.setSubject("Confirm your email to get started");
+		msg.setText("Thank you for your registration !" + "\n" +
+		"We have sent you a confirmation email." + "\n" +
+				"Click on the link (box) in the email to access your account." + "\n" +
+				"Haven't received the email?" + "\n" +
+				"Check your spam folder or click here to resend the confirmation email"+"\n"+
+				" Email pour communiquer mtlsauvage@gmail.ca");
+
+		javaMailSender.send(msg);
+
 	}
 
 
