@@ -1,9 +1,5 @@
 package com.example.excelProj.Dto;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -29,6 +25,9 @@ public class PostDto implements Serializable {
     String url;
 
     Date date;
+
+    String notificationTitle;
+    String notificationBody;
 
     public PostDto(Long id, String description, Long userId, byte[] userProfilePicture, String username, byte[] image, String type, String url, Date date) {
         this.id = id;
@@ -116,5 +115,21 @@ public class PostDto implements Serializable {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public String getNotificationTitle() {
+        return notificationTitle;
+    }
+
+    public void setNotificationTitle(String notificationTitle) {
+        this.notificationTitle = notificationTitle;
+    }
+
+    public String getNotificationBody() {
+        return notificationBody;
+    }
+
+    public void setNotificationBody(String notificationBody) {
+        this.notificationBody = notificationBody;
     }
 }

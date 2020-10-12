@@ -26,11 +26,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
 
-
 @ComponentScan
 @SpringBootApplication
 public class ExcelProjApplication extends SpringBootServletInitializer {
 //SpringBootServletInitializer
+//private final static Logger LOGGER = Logger.getLogger(MyLogger.class.getName());
+
+//	private static Logger logger = LoggerFactory.getLogger(ExcelProjApplication.class);
 	public static void main(String[] args) {
 		SpringApplication.run(ExcelProjApplication.class, args);
 
@@ -38,8 +40,8 @@ public class ExcelProjApplication extends SpringBootServletInitializer {
 		System.out.println("current dir = " + dir);
 		System.out.println("Current path = " + Constants.galleryImagePath);
 
-		Constants.SERVER_PATH = dir;
-
+//		Constants.SERVER_PATH = "";
+//		logger.info(Constants.SERVER_PATH);
 	}
 
 	@Bean

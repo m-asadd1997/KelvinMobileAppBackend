@@ -1,25 +1,20 @@
 package com.example.excelProj.Service;
 
 import com.example.excelProj.Commons.ApiResponse;
-import com.example.excelProj.Config.WebsocketConfig;
+import com.example.excelProj.Dto.NotificationBody;
 import com.example.excelProj.Dto.NotificationDto;
+import com.example.excelProj.Dto.NotificationObject;
 import com.example.excelProj.Dto.PostDto;
-import com.example.excelProj.Model.Friend;
-import com.example.excelProj.Model.Notification;
 import com.example.excelProj.Model.Post;
 import com.example.excelProj.Model.User;
-import com.example.excelProj.Repository.FriendRepository;
 import com.example.excelProj.Repository.NotificationRepository;
 import com.example.excelProj.Repository.PostRepository;
 import com.example.excelProj.Repository.UserDaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
@@ -41,6 +36,9 @@ public class PostService {
     @Autowired
     NotificationRepository notificationRepository;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     public ResponseEntity<String> submitUserPost(Long userId,PostDto postDto) {
 
 
@@ -52,16 +50,17 @@ public class PostService {
        Optional<User>  user=userDaoRepository.findById(userId);
 
         if (user.isPresent()) {
-
+            NotificationBody notificationBody = new NotificationBody();
+            NotificationObject notificationObject = new NotificationObject();
             if (user.get().getUserType().equalsIgnoreCase("USER")) {
                 Post post = new Post(postDto.getDescription(), postDto.getImage(), "USER", null, new Date(), user.get());
                 postRepository.save(post);
-                notificationService.savePostNotification(populateNotificationDto(user.get()));
+                notificationService.savePostNotification(notificationObject,notificationBody,postDto,populateNotificationDto(user.get()));
                 return new ResponseEntity<>("\"Post Submitted\"", HttpStatus.OK);
             } else if (user.get().getUserType().equalsIgnoreCase("Business User")) {
                 Post post = new Post(postDto.getDescription(), postDto.getImage(), "BUSINESS", postDto.getUrl(), new Date(), user.get());
                 postRepository.save(post);
-                notificationService.savePostNotification(populateNotificationDto(user.get()));
+                notificationService.savePostNotification(notificationObject,notificationBody,postDto,populateNotificationDto(user.get()));
                 return new ResponseEntity<>("\"Post Submitted\"", HttpStatus.OK);
             }
 
